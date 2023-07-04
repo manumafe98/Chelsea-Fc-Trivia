@@ -8,12 +8,14 @@ router = APIRouter()
 
 @router.get("/players", response_model=list[ChelseaPlayers])
 async def players():
+    # How many goals did: PLAYER score?
     random_players = db_client.chelsea_players.aggregate([{"$sample": {"size": 3}}])
     return chelsea_players_schema(random_players)
     
 
 @router.get("/nationality", response_model=list[ChelseaPlayers])
 async def nationality_question():
+    # Which player of the followings is from: COUNTRY?
     random_data = db_client.chelsea_players.aggregate([{"$sample": {"size": 1}}])
     random_player = chelsea_players_schema(random_data)[0]
     nationality = random_player["nationality"]
@@ -24,8 +26,15 @@ async def nationality_question():
     return players_array
 
 
+@router.get("/position")
+async def position_question():
+    # Which one of the following players used to play as: POSITION?
+    pass
+
+
 @router.get("/top_appearances", response_model=list[ChelseaPlayers])
 async def top_appearances():
+    # Which one of these players has the most appearances for chelsea?
     sort_criteria = [("appearances", -1)]
     player_with_most_appearances = chelsea_player_schema(db_client.chelsea_players.find_one(sort=sort_criteria))
     player_with_most_appearances_name = player_with_most_appearances["name"]
@@ -38,6 +47,7 @@ async def top_appearances():
 
 @router.get("/top_goalscorer", response_model=list[ChelseaPlayers])
 async def top_goalscorer():
+    # Which one of these players is the top goalscorer of chelsea?
     sort_criteria = [("goals", -1)]
     player_with_most_goals = chelsea_player_schema(db_client.chelsea_players.find_one(sort=sort_criteria))
     player_with_most_goals_name = player_with_most_goals["name"]
@@ -48,13 +58,13 @@ async def top_goalscorer():
     return players_array
 
 
-# Example questions:
-# Which player of the following have the most goals?
-# Which player of the following have the most appereances?
-# Which player of the followings is from: COUNTRY?
-# Which one of the following players used to play as: POSITION?
-# Which one of the following players played for chelsea in this frame of time: CAREER?
+@router.get("/most_goals")
+async def most_goals():
+    # Which player of the following have the most goals?
+    pass
 
-# Podriamos hacer a la inversa, tambien tipo seleccionar el nobmre del jugador y poner 3 respuestas con numeros de goles
-# y viceversa
-# How many goals did: PLAYER score?
+
+@router.get("/most_appearances")
+async def most_appearances():
+    # Which player of the following have the most appereances?
+    pass
