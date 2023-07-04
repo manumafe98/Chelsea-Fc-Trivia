@@ -15,4 +15,4 @@ for index, row in df.iterrows():
                                 appearances = row["Appearances"],
                                 goals = row["Goals"])
     data = new_player.dict()
-    db_client.chelsea_player.insert_one(data)
+    db_client.chelsea_players.insert_one(data)
