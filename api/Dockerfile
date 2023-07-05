@@ -4,7 +4,7 @@ FROM python:3.11
 WORKDIR /app
 
 # Copy the code to the workdir
-COPY . /add
+COPY . /app
 
 # Install the app requirements
 RUN pip install -r requirements.txt
