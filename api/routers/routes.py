@@ -122,3 +122,8 @@ async def most_appearances():
             appearances = player["appearances"]
             name = player["name"]
     return {"appearances": appearances, "correct_answer": name, "players": player_array}
+
+
+# TODO add docstrings
+# TODO add content to readme
+# TODO start building the frontend that consumes the api
