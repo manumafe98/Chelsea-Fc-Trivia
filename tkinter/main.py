@@ -12,7 +12,7 @@ counter = 0
 score = 0
 
 
-def button_clicked(player):
+def button_clicked(player, attribute, answer):
     global counter, score
     counter += 1
 
@@ -25,10 +25,11 @@ def button_clicked(player):
     get_question()
 
 
-def create_buttons(players):
+def create_buttons(players, attribute, answer):
     row = 1
     for player in players:
-        button = Button(window, text=player[attribute], command=lambda p=player: button_clicked(p))
+        button = Button(window, text=player[attribute], 
+                        command=lambda p=player, attr=attribute, ans=answer: button_clicked(p, attr, ans))
         button.grid(row=row, column=0)
         row += 1
 
@@ -49,7 +50,6 @@ def play_again():
     counter = 0
     score = 0
 
-    # Clear the previous buttons and result
     for widget in window.winfo_children():
         widget.destroy()
 
@@ -66,20 +66,27 @@ def get_question():
     return output
 
 
+def trivia():
+    data = get_question()
+    # question_trivia = canvas.create_text(125, 125, text="", width=125, font=("Arial", 15, "bold"), fill="white")
+    # canvas.grid(row=0, column=0)
+
+    canvas.itemconfig(trivia_title, text=data["question"])
+    create_buttons(players=data["players"], attribute=data["attribute"], answer=data["correct_answer"])
+
+
 window = Tk()
 window.title("Chelsea Fc Trivia")
 window.config(padx=50, pady=50, background="blue")
 
 canvas = Canvas(width=250, height=250, background="blue")
-data = get_question()
-question = data["question"]
-answer = data["correct_answer"]
-attribute = data["attribute"]
+trivia_title = canvas.create_text(125, 125, text="Chelsea Fc Trivia", 
+                                  width=125, font=("Arial", 20, "bold"), fill="white")
 
-question_trivia = canvas.create_text(125, 125, text="", width=125, font=("Arial", 15, "bold"), fill="white")
-canvas.itemconfig(question_trivia, text=question)
+start_playing_button = Button(text="Start Playing", highlightthickness=0, command=trivia)
+start_playing_button.grid(row=1, column=0)
 canvas.grid(row=0, column=0)
 
-create_buttons(data["players"])
-
 window.mainloop()
+
+# TODO fix the game so when you click a option goes to the next question
