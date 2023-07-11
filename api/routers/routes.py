@@ -229,4 +229,3 @@ async def most_appearances():
 
 
 # TODO add content to readme
-# TODO decide if build a frontend or a gui
