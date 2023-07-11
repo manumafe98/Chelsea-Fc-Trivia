@@ -12,7 +12,7 @@ for index, row in df.iterrows():
                                nationality = row.iloc[1],
                                position = row.iloc[2],
                                career = row.iloc[3],
-                               appearances = row.iloc[4],
-                               goals = row.iloc[5])
+                               appearances = row.iloc[6],
+                               goals = row.iloc[7])
     data = new_player.dict()
     db_client.chelsea_players.insert_one(data)

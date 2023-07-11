@@ -15,30 +15,33 @@ score = 0
 def button_clicked(player):
     global counter, score
     counter += 1
-    print(f"Selected player: {player}")
 
-    if player == "Correct Answer":
+    if player[attribute] == answer:
         score += 1
 
     if counter == 10:
         show_result()
+    
+    get_question()
 
 
 def create_buttons(players):
+    row = 1
     for player in players:
         button = Button(window, text=player[attribute], command=lambda p=player: button_clicked(p))
-        button.pack()
+        button.grid(row=row, column=0)
+        row += 1
 
 
 def show_result():
     result_label = Label(window, text=f"Your score was {score} out of 10")
-    result_label.pack()
+    result_label.grid(row=1, column=0)
 
     stop_button = Button(window, text="Stop Playing", command=window.quit)
-    stop_button.pack()
+    stop_button.grid(row=1, column=0)
 
     play_again_button = Button(window, text="Play Again", command=play_again)
-    play_again_button.pack()        
+    play_again_button.grid(row=1, column=0)
 
 
 def play_again():
@@ -65,14 +68,18 @@ def get_question():
 
 window = Tk()
 window.title("Chelsea Fc Trivia")
-window.config(padx=50, pady=50)
+window.config(padx=50, pady=50, background="blue")
 
+canvas = Canvas(width=250, height=250, background="blue")
 data = get_question()
 question = data["question"]
 answer = data["correct_answer"]
 attribute = data["attribute"]
 
-create_buttons(data["players"])
+question_trivia = canvas.create_text(125, 125, text="", width=125, font=("Arial", 15, "bold"), fill="white")
+canvas.itemconfig(question_trivia, text=question)
+canvas.grid(row=0, column=0)
 
+create_buttons(data["players"])
 
 window.mainloop()
