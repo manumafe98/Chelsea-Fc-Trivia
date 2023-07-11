@@ -75,7 +75,7 @@ async def nationality_question():
     players_array.append(random_player)
     question = f"Which player of the followings is from {nationality}?"
 
-    return {"question": question, "attribute": "name", "corect_answer": random_player["name"], "players": players_array}
+    return {"question": question, "attribute": "name", "correct_answer": random_player["name"], "players": players_array}
 
 
 @router.get("/position", status_code=status.HTTP_200_OK)
@@ -100,7 +100,7 @@ async def position_question():
     players_array.append(random_player)
     question = f"Which one of the following players used to play as {position}?"
 
-    return {"question": question, "attribute": "name", "corect_answer": random_player["name"], "players": players_array}
+    return {"question": question, "attribute": "name", "correct_answer": random_player["name"], "players": players_array}
 
 
 @router.get("/top_appearances", status_code=status.HTTP_200_OK)
@@ -125,7 +125,7 @@ async def top_appearances():
     question = "Which one of these players has the most appearances for Chelsea?"
 
     return {"question": question, "attribute": "name", 
-            "corect_answer": player_with_most_appearances_name, "players": players_array}
+            "correct_answer": player_with_most_appearances_name, "players": players_array}
 
 
 @router.get("/top_goalscorer", status_code=status.HTTP_200_OK)
@@ -150,7 +150,7 @@ async def top_goalscorer():
     question = "Which one of these players is the top goalscorer of Chelsea?"
 
     return {"question": question,  "attribute": "name", 
-            "corect_answer": player_with_most_goals_name, "players": players_array}
+            "correct_answer": player_with_most_goals_name, "players": players_array}
 
 
 @router.get("/most_goals", status_code=status.HTTP_200_OK)
