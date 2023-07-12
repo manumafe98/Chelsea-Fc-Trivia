@@ -1,92 +1,43 @@
-from tkinter import *
-import requests
-import random
+import customtkinter as ctk
+import tkinter
+import os
+from PIL import Image
 
 
-ENDPOINTS = ["players", "nationality", "position", "top_appearances", 
-             "top_goalscorer", "most_goals", "most_appearances"]
-NOT_REPEAT = ["top_goalscorer", "top_appearances"]
+main_dir = os.path.dirname(__file__)
+images_dir = os.path.join(main_dir, "images")
+print(images_dir)
 
-used_endpoint = []
-counter = 0
-score = 0
-
-
-def button_clicked(player, attribute, answer):
-    global counter, score
-    counter += 1
-
-    if player[attribute] == answer:
-        score += 1
-
-    if counter == 10:
-        show_result()
-    
-    get_question()
+ctk.set_appearance_mode("system")
+ctk.set_default_color_theme("blue")
 
 
-def create_buttons(players, attribute, answer):
-    row = 1
-    for player in players:
-        button = Button(window, text=player[attribute], 
-                        command=lambda p=player, attr=attribute, ans=answer: button_clicked(p, attr, ans))
-        button.grid(row=row, column=0)
-        row += 1
+class Home():
+    def __init__(self):
+        self.window = ctk.CTk()
+        self.window.title("Chelsea FC Trivia")
+        self.window.iconbitmap(os.path.join(images_dir, "chelsea_logo.ico"))
+        self.window.geometry("600x600")
 
 
-def show_result():
-    result_label = Label(window, text=f"Your score was {score} out of 10")
-    result_label.grid(row=1, column=0)
 
-    stop_button = Button(window, text="Stop Playing", command=window.quit)
-    stop_button.grid(row=1, column=0)
+        logo = ctk.CTkImage(Image.open(os.path.join(images_dir, "chelsea_main_logo.png")), size=(473, 157))
+        label = ctk.CTkLabel(master=self.window, image=logo, text="")
+        label.pack(pady=30)
 
-    play_again_button = Button(window, text="Play Again", command=play_again)
-    play_again_button.grid(row=1, column=0)
+        chelsea_trivia = ChelseaTrivia()
 
 
-def play_again():
-    global counter, score
-    counter = 0
-    score = 0
+        button = ctk.CTkButton(master=self.window, text="Start Trivia", 
+                               text_color="white", command=chelsea_trivia.start_playing)
+        button.place(relx=0.5, rely=0.5, anchor=tkinter.CENTER)
 
-    for widget in window.winfo_children():
-        widget.destroy()
+        self.window.mainloop()
 
 
-def get_question():
-    random_endpoint = random.choice(ENDPOINTS)
-    used_endpoint.append(random_endpoint)
+class ChelseaTrivia():
+    def __init__(self):
+        pass
 
-    if random_endpoint in NOT_REPEAT and random_endpoint in used_endpoint:
-        get_question()
-    response = requests.get(f"http://localhost:8000/{random_endpoint}")
-    output = response.json()
-
-    return output
-
-
-def trivia():
-    data = get_question()
-    # question_trivia = canvas.create_text(125, 125, text="", width=125, font=("Arial", 15, "bold"), fill="white")
-    # canvas.grid(row=0, column=0)
-
-    canvas.itemconfig(trivia_title, text=data["question"])
-    create_buttons(players=data["players"], attribute=data["attribute"], answer=data["correct_answer"])
-
-
-window = Tk()
-window.title("Chelsea Fc Trivia")
-window.config(padx=50, pady=50, background="blue")
-
-canvas = Canvas(width=250, height=250, background="blue")
-trivia_title = canvas.create_text(125, 125, text="Chelsea Fc Trivia", 
-                                  width=125, font=("Arial", 20, "bold"), fill="white")
-
-start_playing_button = Button(text="Start Playing", highlightthickness=0, command=trivia)
-start_playing_button.grid(row=1, column=0)
-canvas.grid(row=0, column=0)
-
-window.mainloop()
-
-# TODO fix the game so when you click a option goes to the next question
+    def start_playing():
+        pass
