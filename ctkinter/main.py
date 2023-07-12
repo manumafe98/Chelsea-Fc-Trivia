@@ -46,13 +46,22 @@ class ChelseaTrivia():
         self.window.geometry("550x500")
         self.window.resizable(width=False, height=False)
 
-    def start_playing():
+        canvas = ctk.CTkCanvas(width=275, height=250, bg="#13487B", highlightbackground="#887642")
+        canvas.pack(pady=15)
+
+        self.canvas_question = canvas.create_text(137, 125, text="", width=250, 
+                                                  font=("Arial", 15, "bold"), fill="#887642")
+
+        self.window.mainloop()
+
+    def start_playing(self):
         pass
 
     
     def stop_playing(self):
         self.window.quit()
 
+trivia = ChelseaTrivia()
 
 class ShowScore():
     def __init__(self):
