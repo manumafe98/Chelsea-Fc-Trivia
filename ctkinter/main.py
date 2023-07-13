@@ -151,3 +151,4 @@ score = Home()
 # TODO maybe find a way to not repeat the same question, like most_goals or most_appearances more than 2 times
 # TODO Find a way to create a command that when the docker is up starts the trivia
 # TODO Dockerize the app
+# TODO add docstrings for the functions and classes
