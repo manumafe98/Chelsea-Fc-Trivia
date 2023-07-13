@@ -6,8 +6,8 @@ WORKDIR /gui
 # Copy the code to the workdir
 COPY . /gui
 
-# Give execution permissions to entrypoint.sh
-RUN chmod +x /gui/entrypoint.sh
-
 # Install the app requirements
 RUN pip install -r requirements.txt
+
+# Run the ctkinter gui
+CMD python main.py

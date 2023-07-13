@@ -25,7 +25,6 @@ services:
       - api
     build: ./ctkinter
     container_name: ctkinter
-    command: ["./entrypoint.sh"]
     networks:
       - app_network    
 

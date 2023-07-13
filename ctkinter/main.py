@@ -79,7 +79,7 @@ class ChelseaTrivia():
         self.endpoint_track.append(random_endpoint)
         if random_endpoint in self.endpoint_track and random_endpoint in self.do_not_repeat_endpoints:
             random_endpoint = random.choice(self.repeat_endpoints)
-        response = requests.get(f"http://localhost:8000/{random_endpoint}")
+        response = requests.get(f"http://api:8000/{random_endpoint}")
         self.output = response.json()
         self.canvas.itemconfig(self.canvas_question, text=self.output["question"])
         options_array = [player[self.output["attribute"]] for player in self.output["players"]]
@@ -150,5 +150,4 @@ score = Home()
 # TODO Improve the way that you know if it is correct or not
 # TODO maybe find a way to not repeat the same question, like most_goals or most_appearances more than 2 times
 # TODO Find a way to create a command that when the docker is up starts the trivia
-# TODO Dockerize the app
 # TODO add docstrings for the functions and classes
