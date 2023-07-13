@@ -42,6 +42,9 @@ class ChelseaTrivia():
     def __init__(self):
         self.endpoints = ["players", "nationality", "position", "top_appearances", 
                           "top_goalscorer", "most_goals", "most_appearances"]
+        self.repeat_endpoints = ["players", "nationality", "position", "most_goals", "most_appearances"]
+        self.do_not_repeat_endpoints = ["top_appearances", "top_goalscorer"]
+        self.endpoint_track = []
         self.score = 0
         self.counter = 0
         self.window = ctk.CTk()
@@ -73,6 +76,9 @@ class ChelseaTrivia():
 
     def get_questions(self):
         random_endpoint = random.choice(self.endpoints)
+        self.endpoint_track.append(random_endpoint)
+        if random_endpoint in self.endpoint_track and random_endpoint in self.do_not_repeat_endpoints:
+            random_endpoint = random.choice(self.repeat_endpoints)
         response = requests.get(f"http://localhost:8000/{random_endpoint}")
         self.output = response.json()
         self.canvas.itemconfig(self.canvas_question, text=self.output["question"])
@@ -86,19 +92,20 @@ class ChelseaTrivia():
         
 
     def check_question(self, answer):
+        self.label = ctk.CTkLabel(master=self.window, text=f"Score: {self.score}/10", font=("Arial", 15, "bold"), 
+                                  text_color="#887642")
+        self.label.place(relx=0.01, rely=1, anchor="sw")
+        
         if self.output["correct_answer"] == answer:
             self.score += 1
-            self.label = ctk.CTkLabel(master=self.window, text=f"Score: {self.score}/10", font=("Arial", 15, "bold"), 
-                                      text_color="#887642")
-            self.label.place(relx=0.01, rely=1, anchor="sw")
+
 
         self.counter += 1
         if self.counter < 10:
             self.get_questions()
         else:
             self.window.destroy()
-            score = ShowScore(self.score)
-            
+            score = ShowScore(self.score)            
 
 
 class ShowScore():
@@ -111,10 +118,11 @@ class ShowScore():
 
 
         logo = ctk.CTkImage(Image.open(os.path.join(images_dir, "chelsea_main_logo.png")), size=(473, 157))
-        self.label = ctk.CTkLabel(master=self.window, image=logo, text=f"Your score was: {score}")
+        self.label = ctk.CTkLabel(master=self.window, image=logo, text="")
         self.label.pack(pady=30)
 
-        score_label = ctk.CTkLabel(master=self.window, text_color="#BFA251", text="", font=("Arial", 20))
+        score_label = ctk.CTkLabel(master=self.window, text_color="#BFA251", 
+                                   text=f"Your score was: {score}", font=("Arial", 20))
         score_label.pack()
 
         play_again_button = ctk.CTkButton(master=self.window, text="Play Again", text_color="#887642", 
@@ -129,6 +137,7 @@ class ShowScore():
         self.window.mainloop()
 
     def stop_playing(self):
+        self.window.destroy()
         self.window.quit()
     
 
@@ -138,5 +147,7 @@ class ShowScore():
 
 score = Home()
 
-# TODO Fix the repetition of top_goalscorer, top_appearances
 # TODO Improve the way that you know if it is correct or not
+# TODO maybe find a way to not repeat the same question, like most_goals or most_appearances more than 2 times
+# TODO Find a way to create a command that when the docker is up starts the trivia
+# TODO Dockerize the app
