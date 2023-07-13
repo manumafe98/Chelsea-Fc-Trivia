@@ -1,7 +1,6 @@
 from fastapi import APIRouter, status
 from fastapi.responses import RedirectResponse
 from db.client import db_client
-from db.models.model import ChelseaPlayer
 from db.schemas.schemas import chelsea_players_schema, chelsea_player_schema
 import random
 
@@ -40,7 +39,7 @@ async def players():
     player = random_player["name"]
     questions_array = [{"goals": f"How many goals did {player} score?"}, 
                        {"appearances": f"How many appearances does {player} has?"},
-                       {"position": f"In which of these position did {player} played?"}, 
+                       {"position": f"In which of these position did {player} played/plays?"}, 
                        {"nationality": f"From which of these countries is {player}"}]
     random_question = random.choice(questions_array)
     key = list(random_question.keys())[0]
@@ -184,7 +183,7 @@ async def most_goals():
         if player["goals"] >= goals:
             goals = player["goals"]
             name = player["name"]
-    question = "Which player of the following have the most goals?"
+    question = "Which player of the following has the most goals?"
 
     return {"question": question, "attribute": "name", "correct_answer": name, "players": player_array}
 
@@ -223,7 +222,7 @@ async def most_appearances():
         if player["appearances"] >= appearances:
             appearances = player["appearances"]
             name = player["name"]
-    question = "Which player of the following have the most appereances?"
+    question = "Which player of the following has the most appereances?"
 
     return {"question": question, "attribute": "name", "correct_answer": name, "players": player_array}
 

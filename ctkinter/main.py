@@ -139,5 +139,4 @@ class ShowScore():
 score = Home()
 
 # TODO Fix the repetition of top_goalscorer, top_appearances
-# TODO Fix the question itself, have x has
 # TODO Improve the way that you know if it is correct or not
