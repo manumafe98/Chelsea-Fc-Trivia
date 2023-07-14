@@ -31,7 +31,8 @@ class Home():
         paragraph_label.pack(pady=5)
 
         button = ctk.CTkButton(master=self.window, text="Start Trivia" , text_color="#887642", 
-                               fg_color="#13487B", font=("Arial", 13, "bold"), command=self.start_playing)
+                               border_color="#887642", border_width=1, fg_color="#13487B", 
+                               font=("Arial", 13, "bold"), command=self.start_playing)
         button.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
 
         self.window.mainloop()
@@ -62,23 +63,31 @@ class ChelseaTrivia():
         self.window.geometry("550x500")
         self.window.resizable(width=False, height=False)
 
+        logo = ctk.CTkImage(Image.open(os.path.join(images_dir, "chelsea_trivia_logo.png")), size=(125, 125))
+        logo_label = ctk.CTkLabel(master=self.window, image=logo, text="")
+        logo_label.place(anchor="nw")
+
         self.canvas = ctk.CTkCanvas(width=275, height=250, bg="#13487B", highlightbackground="#887642")
-        self.canvas.pack(pady=30)
+        self.canvas.pack(pady=45)
 
         self.canvas_question = self.canvas.create_text(137, 125, text="", width=250, 
                                                        font=("Arial", 15, "bold"), fill="#887642")
         
-        self.button1 = ctk.CTkButton(master=self.window, text="", text_color="#887642", 
-                                    width=270, fg_color="#13487B", font=("Arial", 13, "bold"))
+        self.button1 = ctk.CTkButton(master=self.window, text="", text_color="#887642", border_color="#887642", 
+                                     border_width=1, width=270, fg_color="#13487B", font=("Arial", 13, "bold"))
         self.button1.pack(pady=5)
 
-        self.button2 = ctk.CTkButton(master=self.window, text="", text_color="#887642", 
-                                    width=270, fg_color="#13487B", font=("Arial", 13, "bold"))
+        self.button2 = ctk.CTkButton(master=self.window, text="", text_color="#887642", border_color="#887642", 
+                                     border_width=1, width=270, fg_color="#13487B", font=("Arial", 13, "bold"))
         self.button2.pack(pady=5)
 
-        self.button3 = ctk.CTkButton(master=self.window, text="", text_color="#887642", 
-                                    width=270, fg_color="#13487B", font=("Arial", 13, "bold"))
+        self.button3 = ctk.CTkButton(master=self.window, text="", text_color="#887642", border_color="#887642", 
+                                     border_width=1, width=270, fg_color="#13487B", font=("Arial", 13, "bold"))
         self.button3.pack(pady=5)
+
+        self.label = ctk.CTkLabel(master=self.window, text=f"Score: 0/10", font=("Arial", 20, "bold"), 
+                                  text_color="#887642")
+        self.label.place(relx=0.01, rely=1, anchor="sw")
 
         self.get_questions()
         self.window.mainloop()
@@ -109,10 +118,7 @@ class ChelseaTrivia():
         Helper function that works as a button command to check if the option that was selected by the user is correct.
         Also tracks the amount of questions to be asked, so when the trivia is finished it shows the score window.
         """
-        self.label = ctk.CTkLabel(master=self.window, text=f"Score: {self.score}/10", font=("Arial", 15, "bold"), 
-                                  text_color="#887642")
-        self.label.place(relx=0.01, rely=1, anchor="sw")
-        
+        self.label.configure(text=f"Score: {self.score}/10")
         if self.output["correct_answer"] == answer:
             self.score += 1
 
@@ -139,18 +145,20 @@ class ShowScore():
 
         logo = ctk.CTkImage(Image.open(os.path.join(images_dir, "chelsea_main_logo.png")), size=(473, 157))
         self.label = ctk.CTkLabel(master=self.window, image=logo, text="")
-        self.label.pack(pady=30)
+        self.label.pack(pady=45)
 
         score_label = ctk.CTkLabel(master=self.window, text_color="#BFA251", 
                                    text=f"Your score was: {score}", font=("Arial", 20))
-        score_label.pack()
+        score_label.pack(pady=10)
 
         play_again_button = ctk.CTkButton(master=self.window, text="Play Again", text_color="#887642", 
-                                          fg_color="#13487B", font=("Arial", 13, "bold"), command=self.play_again)
+                                          border_color="#887642", border_width=1, fg_color="#13487B", 
+                                          font=("Arial", 13, "bold"), command=self.play_again)
         play_again_button.pack(pady=5)
 
-        stop_playing_button = ctk.CTkButton(master=self.window, text="Stop Playing", text_color="white", 
-                                            fg_color="#BFA251", hover_color="#887643", font=("Arial", 13, "bold"), 
+        stop_playing_button = ctk.CTkButton(master=self.window, text="Stop Playing", text_color="#13487B", 
+                                            border_color="#13487B", border_width=1, fg_color="#BFA251", 
+                                            hover_color="#887643", font=("Arial", 13, "bold"), 
                                             command=self.stop_playing)
         stop_playing_button.pack(pady=5)
 
@@ -171,10 +179,10 @@ class ShowScore():
         self.window.destroy()
         trivia = ChelseaTrivia()
 
-if "__main__" == "__name__":
-    score = Home()
+
+trivia = Home()
 
 
 # TODO Improve the way that you know if it is correct or not
 # TODO maybe find a way to not repeat the same question, like most_goals or most_appearances more than 2 times
-# TODO Find a way to create a command that when the docker is up starts the trivia
+
