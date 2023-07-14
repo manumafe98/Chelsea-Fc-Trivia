@@ -11,6 +11,9 @@ ctk.set_default_color_theme("blue")
 
 
 class Home():
+    """
+    Handles the home window of the GUI.
+    """
     def __init__(self):
         self.window = ctk.CTk()
         self.window.title("Chelsea FC Trivia")
@@ -34,11 +37,17 @@ class Home():
         self.window.mainloop()
     
     def start_playing(self):
+        """
+        Helper function that works as a button command to start the trivia.
+        """
         self.window.destroy()
         trivia = ChelseaTrivia()
 
 
 class ChelseaTrivia():
+    """
+    Handles the trivia window of the GUI.
+    """
     def __init__(self):
         self.endpoints = ["players", "nationality", "position", "top_appearances", 
                           "top_goalscorer", "most_goals", "most_appearances"]
@@ -75,11 +84,15 @@ class ChelseaTrivia():
         self.window.mainloop()
 
     def get_questions(self):
+        """
+        Helper function that works as the logic of the trivia, by getting a json object from the api.
+        With that json assigns to the canvas and buttons the respective question and options.
+        """
         random_endpoint = random.choice(self.endpoints)
         self.endpoint_track.append(random_endpoint)
         if random_endpoint in self.endpoint_track and random_endpoint in self.do_not_repeat_endpoints:
             random_endpoint = random.choice(self.repeat_endpoints)
-        response = requests.get(f"http://api:8000/{random_endpoint}")
+        response = requests.get(f"http://localhost:8000/{random_endpoint}")
         self.output = response.json()
         self.canvas.itemconfig(self.canvas_question, text=self.output["question"])
         options_array = [player[self.output["attribute"]] for player in self.output["players"]]
@@ -92,6 +105,10 @@ class ChelseaTrivia():
         
 
     def check_question(self, answer):
+        """
+        Helper function that works as a button command to check if the option that was selected by the user is correct.
+        Also tracks the amount of questions to be asked, so when the trivia is finished it shows the score window.
+        """
         self.label = ctk.CTkLabel(master=self.window, text=f"Score: {self.score}/10", font=("Arial", 15, "bold"), 
                                   text_color="#887642")
         self.label.place(relx=0.01, rely=1, anchor="sw")
@@ -109,6 +126,9 @@ class ChelseaTrivia():
 
 
 class ShowScore():
+    """
+    Handles the score windows of the GUI.
+    """
     def __init__(self, score):
         self.window = ctk.CTk()
         self.window.title("Chelsea FC Trivia")
@@ -137,17 +157,24 @@ class ShowScore():
         self.window.mainloop()
 
     def stop_playing(self):
+        """
+        Helper function that works as a button command to quit playing.
+        """
         self.window.destroy()
         self.window.quit()
     
 
     def play_again(self):
+        """
+        Helper function that works as a button command to play again the trivia.
+        """
         self.window.destroy()
         trivia = ChelseaTrivia()
 
-score = Home()
+if "__main__" == "__name__":
+    score = Home()
+
 
 # TODO Improve the way that you know if it is correct or not
 # TODO maybe find a way to not repeat the same question, like most_goals or most_appearances more than 2 times
 # TODO Find a way to create a command that when the docker is up starts the trivia
-# TODO add docstrings for the functions and classes
