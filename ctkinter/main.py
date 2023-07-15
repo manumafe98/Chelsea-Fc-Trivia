@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from PIL import Image
-import tkinter, os, random, requests
+import os, random, requests
 
 
 main_dir = os.path.dirname(__file__)
@@ -33,7 +33,12 @@ class Home():
         button = ctk.CTkButton(master=self.window, text="Start Trivia" , text_color="#887642", 
                                border_color="#887642", border_width=1, fg_color="#13487B", 
                                font=("Arial", 13, "bold"), command=self.start_playing)
-        button.place(relx=0.5, rely=0.6, anchor=tkinter.CENTER)
+        button.pack(pady=5)
+
+        rules_button = ctk.CTkButton(master=self.window, text="Rules", text_color="#13487B", 
+                                     border_color="#13487B", border_width=1, fg_color="#BFA251", 
+                                     hover_color="#887643", font=("Arial", 13, "bold"), command=self.show_rules)
+        rules_button.pack(pady=5)
 
         self.window.mainloop()
     
@@ -43,6 +48,13 @@ class Home():
         """
         self.window.destroy()
         trivia = ChelseaTrivia()
+
+
+    def show_rules(self):
+        """
+        Helper function that works as a button command to show the game rules.
+        """
+        rules = Rules()
 
 
 class ChelseaTrivia():
@@ -57,6 +69,7 @@ class ChelseaTrivia():
         self.endpoint_track = []
         self.score = 0
         self.counter = 0
+        self.value = 0
         self.window = ctk.CTk()
         self.window.title("Chelsea FC Trivia")
         self.window.iconbitmap(os.path.join(images_dir, "chelsea_logo.ico"))
@@ -89,6 +102,11 @@ class ChelseaTrivia():
                                   text_color="#887642")
         self.label.place(relx=0.01, rely=1, anchor="sw")
 
+        self.progess_bar = ctk.CTkProgressBar(master=self.window, mode="determinate", width=275, height=15, 
+                                              fg_color="#887642", progress_color="#13487B")
+        self.progess_bar.set(value=self.value)
+        self.progess_bar.place(rely=0.99, relx=0.5, anchor="s")
+
         self.get_questions()
         self.window.mainloop()
 
@@ -119,6 +137,8 @@ class ChelseaTrivia():
         Also tracks the amount of questions to be asked, so when the trivia is finished it shows the score window.
         """
         self.label.configure(text=f"Score: {self.score}/10")
+        self.value += 0.1
+        self.progess_bar.set(value=self.value)
         if self.output["correct_answer"] == answer:
             self.score += 1
 
@@ -148,7 +168,7 @@ class ShowScore():
         self.label.pack(pady=45)
 
         score_label = ctk.CTkLabel(master=self.window, text_color="#BFA251", 
-                                   text=f"Your score was: {score}", font=("Arial", 20))
+                                   text=f"Your final score is: {score}", font=("Arial", 20))
         score_label.pack(pady=10)
 
         play_again_button = ctk.CTkButton(master=self.window, text="Play Again", text_color="#887642", 
@@ -180,9 +200,31 @@ class ShowScore():
         trivia = ChelseaTrivia()
 
 
+class Rules():
+    def __init__(self):
+        self.window = ctk.CTkToplevel()
+        self.window.title("Rules")
+        self.window.geometry("550x225")
+        self.window.resizable(width=False, height=False)
+        self.window.grab_set()
+        self.rules = '''Welcome to Chelsea FC Trivia!
+        \nThis game will test your knowledge of Chelsea FC.
+        \nWith 10 random questions about players, stats, nationalities, and positions.
+        \nEach question will have a time limit of 15 seconds.
+        \nGet ready to have some fun and enjoy the game!"'''
+    
+        label = ctk.CTkLabel(master=self.window, text=self.rules, justify="center", 
+                             text_color="#BFA251", font=("Arial", 13, "bold"))
+        label.pack(padx=(10,10), pady=(15,0))
+
+        button = ctk.CTkButton(master=self.window, text="Close", width=80, text_color="#887642", 
+                               border_color="#887642", border_width=1, fg_color="#13487B", 
+                               font=("Arial", 13, "bold"), command=lambda: self.window.destroy())
+        button.pack(pady=10)
+
 trivia = Home()
 
 
-# TODO Improve the way that you know if it is correct or not
-# TODO maybe find a way to not repeat the same question, like most_goals or most_appearances more than 2 times
-
+# TODO maybe find a way to not repeat the same question, like most_goals or most_appearances more than 2 times.
+# TODO add a timer of 15/20 seconds and if there is no answer pass to the next one.
+# TODO how to pack a python gui to execute in windows
