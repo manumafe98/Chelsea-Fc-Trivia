@@ -70,6 +70,7 @@ class ChelseaTrivia():
         self.score = 0
         self.counter = 0
         self.value = 0
+        self.timer = 15
         self.window = ctk.CTk()
         self.window.title("Chelsea FC Trivia")
         self.window.iconbitmap(os.path.join(images_dir, "chelsea_logo.ico"))
@@ -79,6 +80,9 @@ class ChelseaTrivia():
         logo = ctk.CTkImage(Image.open(os.path.join(images_dir, "chelsea_trivia_logo.png")), size=(125, 125))
         logo_label = ctk.CTkLabel(master=self.window, image=logo, text="")
         logo_label.place(anchor="nw")
+
+        self.timer_label = ctk.CTkLabel(master=self.window, text=f"", text_color="#887642", font=("Arial", 20))
+        self.timer_label.place(relx=0.99, rely=0.01, anchor="ne")
 
         self.canvas = ctk.CTkCanvas(width=275, height=250, bg="#13487B", highlightbackground="#887642")
         self.canvas.pack(pady=45)
@@ -108,6 +112,7 @@ class ChelseaTrivia():
         self.progess_bar.place(rely=0.99, relx=0.5, anchor="s")
 
         self.get_questions()
+
         self.window.mainloop()
 
     def get_questions(self):
@@ -129,7 +134,7 @@ class ChelseaTrivia():
                                command=lambda ans=options_array[1]: self.check_question(ans))
         self.button3.configure(text=options_array[2], 
                                command=lambda ans=options_array[2]: self.check_question(ans))
-        
+        self.countdown(self.timer)
 
     def check_question(self, answer):
         """
@@ -148,8 +153,19 @@ class ChelseaTrivia():
             self.get_questions()
         else:
             self.window.destroy()
-            score = ShowScore(self.score)            
-
+            score = ShowScore(self.score)
+    
+    def countdown(self, seconds):
+        if seconds > 0:
+            self.timer_label.configure(text=f"{seconds}sec")
+            seconds -= 1
+            self.timer_label.after(1000, self.countdown, seconds)
+        else:
+            self.value += 0.1
+            self.progess_bar.set(value=self.value)
+            self.counter += 1
+            self.timer = 15
+            self.get_questions()
 
 class ShowScore():
     """
@@ -201,6 +217,9 @@ class ShowScore():
 
 
 class Rules():
+    """
+    Handles the GUI window for the rules.
+    """
     def __init__(self):
         self.window = ctk.CTkToplevel()
         self.window.title("Rules")
@@ -222,9 +241,9 @@ class Rules():
                                font=("Arial", 13, "bold"), command=lambda: self.window.destroy())
         button.pack(pady=10)
 
+
 trivia = Home()
 
 
-# TODO maybe find a way to not repeat the same question, like most_goals or most_appearances more than 2 times.
 # TODO add a timer of 15/20 seconds and if there is no answer pass to the next one.
 # TODO how to pack a python gui to execute in windows
