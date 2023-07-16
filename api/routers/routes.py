@@ -44,10 +44,16 @@ async def players():
     random_question = random.choice(questions_array)
     key = list(random_question.keys())[0]
     question = random_question[key]
-    random_players = db_client.chelsea_players.aggregate([{"$match": {key: {"$ne": random_player[key]}}}, 
-                                                          {"$sample": {"size": 2}}])
-    players_array = chelsea_players_schema(random_players)
-    players_array.append(random_player)
+    random_data2 = db_client.chelsea_players.aggregate([{"$match": {key: {"$ne": random_player[key]}}}, 
+                                                        {"$sample": {"size": 1}}])
+    random_player2 = chelsea_players_schema(random_data2)[0]
+    
+    random_data3 = db_client.chelsea_players.aggregate([{"$match": {"$and": [{key: {"$ne": random_player[key]}}, 
+                                                                             {key: {"$ne": random_player2[key]}}]}}, 
+                                                                             {"$sample": {"size": 1}}])
+    random_player3 = chelsea_players_schema(random_data3)[0]
+
+    players_array = [random_player, random_player2, random_player3]
 
     return {"question": question, "attribute": key, "correct_answer": random_player[key], "players": players_array}
     
@@ -74,7 +80,8 @@ async def nationality_question():
     players_array.append(random_player)
     question = f"Which player of the followings is from {nationality}?"
 
-    return {"question": question, "attribute": "name", "correct_answer": random_player["name"], "players": players_array}
+    return {"question": question, "attribute": "name", 
+            "correct_answer": random_player["name"], "players": players_array}
 
 
 @router.get("/position", status_code=status.HTTP_200_OK)
@@ -99,7 +106,8 @@ async def position_question():
     players_array.append(random_player)
     question = f"Which one of the following players used to play as {position}?"
 
-    return {"question": question, "attribute": "name", "correct_answer": random_player["name"], "players": players_array}
+    return {"question": question, "attribute": "name", 
+            "correct_answer": random_player["name"], "players": players_array}
 
 
 @router.get("/top_appearances", status_code=status.HTTP_200_OK)
@@ -225,6 +233,3 @@ async def most_appearances():
     question = "Which player of the following has the most appereances?"
 
     return {"question": question, "attribute": "name", "correct_answer": name, "players": player_array}
-
-
-# TODO add content to readme

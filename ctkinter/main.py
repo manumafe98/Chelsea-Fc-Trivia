@@ -70,7 +70,6 @@ class ChelseaTrivia():
         self.score = 0
         self.counter = 0
         self.value = 0
-        self.timer = 15
         self.window = ctk.CTk()
         self.window.title("Chelsea FC Trivia")
         self.window.iconbitmap(os.path.join(images_dir, "chelsea_logo.ico"))
@@ -80,9 +79,6 @@ class ChelseaTrivia():
         logo = ctk.CTkImage(Image.open(os.path.join(images_dir, "chelsea_trivia_logo.png")), size=(125, 125))
         logo_label = ctk.CTkLabel(master=self.window, image=logo, text="")
         logo_label.place(anchor="nw")
-
-        self.timer_label = ctk.CTkLabel(master=self.window, text=f"", text_color="#887642", font=("Arial", 20))
-        self.timer_label.place(relx=0.99, rely=0.01, anchor="ne")
 
         self.canvas = ctk.CTkCanvas(width=275, height=250, bg="#13487B", highlightbackground="#887642")
         self.canvas.pack(pady=45)
@@ -104,7 +100,7 @@ class ChelseaTrivia():
 
         self.label = ctk.CTkLabel(master=self.window, text=f"Score: 0/10", font=("Arial", 20, "bold"), 
                                   text_color="#887642")
-        self.label.place(relx=0.01, rely=1, anchor="sw")
+        self.label.place(relx=0.99, rely=1, anchor="se")
 
         self.progess_bar = ctk.CTkProgressBar(master=self.window, mode="determinate", width=275, height=15, 
                                               fg_color="#887642", progress_color="#13487B")
@@ -134,19 +130,17 @@ class ChelseaTrivia():
                                command=lambda ans=options_array[1]: self.check_question(ans))
         self.button3.configure(text=options_array[2], 
                                command=lambda ans=options_array[2]: self.check_question(ans))
-        self.countdown(self.timer)
 
     def check_question(self, answer):
         """
         Helper function that works as a button command to check if the option that was selected by the user is correct.
         Also tracks the amount of questions to be asked, so when the trivia is finished it shows the score window.
         """
-        self.label.configure(text=f"Score: {self.score}/10")
         self.value += 0.1
         self.progess_bar.set(value=self.value)
         if self.output["correct_answer"] == answer:
             self.score += 1
-
+            self.label.configure(text=f"Score: {self.score}/10")
 
         self.counter += 1
         if self.counter < 10:
@@ -155,17 +149,6 @@ class ChelseaTrivia():
             self.window.destroy()
             score = ShowScore(self.score)
     
-    def countdown(self, seconds):
-        if seconds > 0:
-            self.timer_label.configure(text=f"{seconds}sec")
-            seconds -= 1
-            self.timer_label.after(1000, self.countdown, seconds)
-        else:
-            self.value += 0.1
-            self.progess_bar.set(value=self.value)
-            self.counter += 1
-            self.timer = 15
-            self.get_questions()
 
 class ShowScore():
     """
@@ -223,14 +206,13 @@ class Rules():
     def __init__(self):
         self.window = ctk.CTkToplevel()
         self.window.title("Rules")
-        self.window.geometry("550x225")
+        self.window.geometry("550x200")
         self.window.resizable(width=False, height=False)
         self.window.grab_set()
         self.rules = '''Welcome to Chelsea FC Trivia!
         \nThis game will test your knowledge of Chelsea FC.
         \nWith 10 random questions about players, stats, nationalities, and positions.
-        \nEach question will have a time limit of 15 seconds.
-        \nGet ready to have some fun and enjoy the game!"'''
+        \nGet ready to have some fun and enjoy the game!'''
     
         label = ctk.CTkLabel(master=self.window, text=self.rules, justify="center", 
                              text_color="#BFA251", font=("Arial", 13, "bold"))
@@ -243,7 +225,3 @@ class Rules():
 
 
 trivia = Home()
-
-
-# TODO add a timer of 15/20 seconds and if there is no answer pass to the next one.
-# TODO how to pack a python gui to execute in windows
